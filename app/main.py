@@ -57,6 +57,9 @@ def get_cost_guard() -> CostGuard:
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     """CHO SẴN — chạy lúc app khởi động và lúc tắt."""
+    # Validate toàn bộ cấu hình ngay khi process khởi động. Đặc biệt, thiếu
+    # AGENT_API_KEY phải làm deployment fail fast thay vì chỉ lỗi ở request đầu.
+    get_settings()
     lifecycle.install()
     log_event("service_started", service=SERVICE_NAME, version=SERVICE_VERSION)
     yield
